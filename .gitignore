@@ -1,0 +1,11 @@
+frontend/node_modules
+node_modules
+./frontend/node_modules
+server/node_modules
+./server/node_modules
+contracts/node_modules
+./contracts/node_modules
+.cache
+./frontend/dist
+./frontend/.cache
+frontend/cache
