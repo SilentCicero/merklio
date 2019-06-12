@@ -2,12 +2,28 @@
 const { utils, providers } = require('ethers');
 const { json, send } = require('micro');
 const Joi = require('joi');
+const query = require('micro-query');
+
+// config variables
+const {
+  privateKey,
+} = require('./config');
+
+/*
+
+new Wallet() => [
+Private Key:
+0x899083f1d7368e8069c872e372314146b30692f5a36f22e718743df500b438a0
+
+Address:
+0xaB67ab145C836E3fEC5b322abAE2533D52d6828A
+]*/
 
 // mongo setup method
 const { connect } = require('./mongo');
 
 // signer key
-const privateKey = new utils.SigningKey(process.env.hashthatprivatekey);
+const signingKey = new utils.SigningKey(privateKey || '0x899083f1d7368e8069c872e372314146b30692f5a36f22e718743df500b438a0');
 
 // validate notify
 const validationSchema = {
@@ -18,7 +34,7 @@ const validationSchema = {
 module.exports = async (req, res) => {
   try {
     // intercept and parse post body
-    const body = await json(req);
+    const body = req.method === 'GET' ? (await query(req)) : (await json(req));
     const {
       hash,
     } = body;
@@ -31,10 +47,10 @@ module.exports = async (req, res) => {
     const { Hash } = await connect();
 
     // find if Tx has already been processed.
-    const findHash = (await Hash.find({ _id }, '_id').limit(1).lean().exec()).pop();
+    const findHash = (await Hash.find({ _id: hash }, '_id c').limit(1).lean().exec()).pop();
 
     // setup date before resolver call
-    const date = new Date();
+    const date = (findHash || {})._id ? (new Date(findHash.c)) : new Date();
     const timestamp = Math.round(date.getTime() / 1000);
 
     // buiild payload (minimized for data )
@@ -45,15 +61,15 @@ module.exports = async (req, res) => {
 
     // signed digest
     const signature = utils
-      .joinSignature(privateKey
+      .joinSignature(signingKey
           .signDigest(utils.keccak256(utils.toUtf8Bytes(JSON.stringify(payload)))));
 
     // ensure hash is not already in the database
-    if (findHash || (findHash || {})._id) return send(res, 200, { s: signature, t: findHash.c });
+    if (findHash || (findHash || {})._id) return send(res, 200, { s: signature, t: timestamp });
 
     // cache the transaction for pickup..
     const saveHash = new Hash({
-      _id: hash
+      _id: hash,
       a: false,
       c: date, // created
     });

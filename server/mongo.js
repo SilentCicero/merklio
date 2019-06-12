@@ -21,7 +21,6 @@ let connection = null;
 // create connection
 async function connect() {
   try {
-
     // connect to mongo
     if (!connection) {
       connection = await mongoose.createConnection(mongoUrl, mongoOptions);

@@ -24,10 +24,10 @@ const axios = require('axios');
 /*
 This is the Best-Case example of the service!
 
-Add a new hash to be merklized
+Add a new hash to be merklized (GET or POST works here)
 */
 
-axios.post('https://merkl.io/add/', {
+axios.get('https://merkl.io/add/', {
   hash: '0x26b74a107f953ab5e3aac2dcde97126224fe6c7da163782bba6372b3deaf1a14',
 });
 

@@ -5,6 +5,7 @@ const axios = require('axios');
 // configuration settings
 const {
   infuraMainnetURL,
+  infruaID,
   privateKey,
 } = require('./config');
 
@@ -21,14 +22,17 @@ const { connect } = require('./mongo');
 // Eth object
 const eth = Eth({ provider: new HttpProvider(infuraMainnetURL) });
 
+// provider
+const provider = new providers.InfuraProvider("homestead", infruaID);
+
 // setup new ethers wallet
-const wallet = new Wallet(privateKey, new providers.InfuraProvider("homestead", apiAccessToken));
+const wallet = new Wallet(privateKey, provider);
 
 // We connect to the Contract using a Provider, so we will only
 // have read-only access to the Contract
 const merkleioContract = new Contract('0xD61324583db4b5c9C282B8253268DF279241CB52', [
   'function store(bytes32 hash)',
-], infuraProvider);
+], provider);
 const contractInstance = merkleioContract.connect(wallet);
 
 // hash a group of hashes deterministically
@@ -58,7 +62,7 @@ let transactionHash = null;
 let hashQueue = [];
 
 // gas prices
-let gasPrice = utils.bigNumberify('3000000000'); // set to 3 gwei..
+let gasPrice = utils.bigNumberify('5000000000'); // set to 3 gwei..
 let gasPriceLastChecked = unixtime();
 
 // base gas limit
@@ -68,7 +72,7 @@ const gasLimit = utils.bigNumberify('4000000');
 async function runProcess() {
   try {
     // wait a few moments to try again
-    await wait(1000);
+    await wait(10000);
 
     // connect mongo, should be instant.. get hashes
     const { Hash, Group } = await connect();
