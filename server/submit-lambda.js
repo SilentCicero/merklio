@@ -9,21 +9,11 @@ const {
   privateKey,
 } = require('./config');
 
-/*
-
-new Wallet() => [
-Private Key:
-0x899083f1d7368e8069c872e372314146b30692f5a36f22e718743df500b438a0
-
-Address:
-0xaB67ab145C836E3fEC5b322abAE2533D52d6828A
-]*/
-
 // mongo setup method
 const { connect } = require('./mongo');
 
 // signer key
-const signingKey = new utils.SigningKey(privateKey || '0x899083f1d7368e8069c872e372314146b30692f5a36f22e718743df500b438a0');
+const signingKey = new utils.SigningKey(privateKey);
 
 // validate notify
 const validationSchema = {
