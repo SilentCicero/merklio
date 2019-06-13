@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
     if (error) throw new Error(error);
 
     // connect mongo
-    const { Hash } = await connect();
+    const { Hash, Group } = await connect();
 
     // find if Tx has already been processed.
     const findHash = (await Hash.find({ _id: hash }).limit(1).lean().exec()).pop();
@@ -37,22 +37,27 @@ module.exports = async (req, res) => {
     // if hash found but not transacted
     if (findHash.a === false) return send(res, 200, { status: 'pending' });
 
-    // if hash is assigned
-    let result = {
-      hash,
-      status: 'pending',
-    };
-
     // group a
     const groupA = (await Group.find({ _id: findHash.m }).limit(1).lean().exec()).pop();
     const groupB = (await Group.find({ _id: groupA.m }).limit(1).lean().exec()).pop();
     const groupC = (await Group.find({ _id: groupB.m }).limit(1).lean().exec()).pop();
 
+    // if hash is assigned
+    let result = {
+      hash,
+      status: groupC.tx ? 'transacted' : 'pending',
+      tx: groupC.tx,
+      created: findHash.c,
+      version: 1,
+    };
+
     // return proof for now
     result.proof = {
-      groupA,
-      groupB,
-      groupC,
+      [groupC._id]: groupC.g.reduce((accC, cHash) => Object.assign(accC, {
+        [cHash]: cHash === groupB._id ? groupB.g.reduce((accB, bHash) => Object.assign(accB, {
+          [bHash]: bHash === groupA._id ? groupA.g : null,
+        }), {}) : {},
+      }), {}),
     };
 
     // return true

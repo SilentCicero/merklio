@@ -96,7 +96,7 @@ async function runProcess() {
     if (gasPrice === null || (unixtime() - gasPriceLastChecked) > fiveMinutes) {
       try {
         const prices = ((await axios.get('https://ethgasstation.info/json/ethgasAPI.json')) || {}).data || {};
-        gasPrice = utils.bigNumberify(((parseInt(prices.safeLow, 10) + 10) * 100000000) || '2000000000');
+        gasPrice = utils.bigNumberify(((parseInt(prices.standard, 10) + 10) * 100000000) || '2000000000');
         gasPriceLastChecked = unixtime();
       } catch (error) {
         console.log('Eth gas station error', error); // dont stop if gas doesn't function..
@@ -118,15 +118,19 @@ async function runProcess() {
     const hashes = (await Hash.find({ a: false })
       .lean().exec())
       .map(hash => hash._id)
-      .filter(hash => hashQueue.indexOf(hash) === -1)// pickup not in local pickups..
-      .concat(hashQueue);
+      .filter(hash => hashQueue.indexOf(hash) === -1);
+    hashQueue = hashQueue.concat(hashes);
 
     // if no hashes restart process
     if (hashes.length <= 0) return await runProcess();
 
+    console.log('# Hashes in queue for processing', hashes.length);
+
     // break hashes into initial subgroup chunks
     const chunks = chunk(hashes, baseTarget - 1); // minus one for entropy hash entry
     const depth1 = {};
+
+    console.log('# Base chunks created', chunks.length);
 
     // database initial chunks
     for (var i = 0; i < chunks.length; i++) {
@@ -192,13 +196,15 @@ async function runProcess() {
     });
     await hashGroup.save();
 
+    console.log('Transaciton occured', tx.hash);
+    console.log('with master hash: ', masterHash);
+
     // update the hash database.
-    await Hash.update({ _id: { $in: hashes }}, {
+    await Hash.updateMany({ _id: { $in: hashes }}, {
       $set: { a: true }, // remove data and assign to true
     }, { multi: false, upsert: false });
 
-    // reset hash queue
-    hashQueue = [];
+    console.log('# Hashes marked assigned, queue reset..', hashes.length);
 
     // run the process again
     return await runProcess();

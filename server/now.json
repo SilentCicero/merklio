@@ -2,23 +2,23 @@
   "version": 2,
   "builds": [{ "src": "*.js", "use": "@now/node" }],
   "routes": [
-    { "src": "/status(.*)",
+    { "src": "/status/(?<hash>[^/]+)",
       "methods": ["GET", "POST", "OPTIONS"],
       "headers": {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
         "Access-Control-Allow-Credentials": "true"
       },
-      "dest": "/status-lambda.js"
+      "dest": "/status-lambda.js?hash=$hash"
     },
-    { "src": "/submit(.*)",
+    { "src": "/add/(?<hash>[^/]+)",
       "methods": ["GET", "POST", "OPTIONS"],
       "headers": {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
         "Access-Control-Allow-Credentials": "true"
       },
-      "dest": "/submit-lambda.js"
+      "dest": "/add-lambda.js?hash=$hash"
     }
   ],
   "env": {
