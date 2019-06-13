@@ -72,7 +72,7 @@ const gasLimit = utils.bigNumberify('4000000');
 async function runProcess() {
   try {
     // wait a few moments to try again
-    await wait(10000);
+    await wait(100000);
 
     // connect mongo, should be instant.. get hashes
     const { Hash, Group } = await connect();

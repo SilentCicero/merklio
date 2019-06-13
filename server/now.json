@@ -22,8 +22,8 @@
     }
   ],
   "env": {
-    "mongoUrlMerklIO": "@mongourlmerklio",
-    "privateKeyMerklIO": "@privatekeymerklio",
-    "infuraIDMerklIO": "@infuraidmerklio"
+    "mongourlmerklio": "@mongourlmerklio",
+    "privatekeymerklio": "@privatekeymerklio",
+    "infuraidmerklio": "@infuraidmerklio"
   }
 }

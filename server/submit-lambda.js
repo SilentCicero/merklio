@@ -1,5 +1,5 @@
 // require global packages
-const { utils, providers } = require('ethers');
+const { utils, providers, Wallet } = require('ethers');
 const { json, send } = require('micro');
 const Joi = require('joi');
 const query = require('micro-query');
