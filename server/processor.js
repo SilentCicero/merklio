@@ -154,7 +154,7 @@ async function runProcess() {
     for (var i = 0; i < chunks.length; i++) {
       const chnk = secondHashes[i];
       const groupMasterHash = hashIt(chnk);
-      depth2[groupMaster] = chnk;
+      depth2[groupMasterHash] = chnk;
 
       // update the hash database.
       await Group.update({ _id: { $in: chnk }}, { // update hashes
