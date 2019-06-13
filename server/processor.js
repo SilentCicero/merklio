@@ -30,7 +30,7 @@ const wallet = new Wallet(privateKey, provider);
 
 // We connect to the Contract using a Provider, so we will only
 // have read-only access to the Contract
-const merkleioContract = new Contract('0xD61324583db4b5c9C282B8253268DF279241CB52', [
+const merkleioContract = new Contract('0x532d85BD4bD0233dfa0eeD5b3fE8BCFBBa0420A4', [
   'function store(bytes32 hash)',
 ], provider);
 const contractInstance = merkleioContract.connect(wallet);
