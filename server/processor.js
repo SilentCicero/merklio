@@ -117,7 +117,7 @@ async function runProcess() {
     // get the oldest hashes that have not been assigned to a merkle tree
     const hashes = (await Hash.find({ a: false })
       .lean().exec())
-      .map(hashData => hash._id)
+      .map(hash => hash._id)
       .filter(hash => hashQueue.indexOf(hash) === -1)// pickup not in local pickups..
       .concat(hashQueue);
 
