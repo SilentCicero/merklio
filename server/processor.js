@@ -129,7 +129,7 @@ async function runProcess() {
     // database initial chunks
     for (var i = 0; i < chunks.length; i++) {
       const addEntropyHash = utils.hexlify(utils.randomBytes(32)); // ensure hashes can't be poisoned by override
-      const chnk = chunks[i].contact([addEntropyHash]); // get chunk
+      const chnk = chunks[i].concat([addEntropyHash]); // get chunk
       const groupMasterHash = hashIt(chnk); // create master hash
       depth1[groupMasterHash] = chnk; // set chunk in object
 
