@@ -1,0 +1,22 @@
+{
+  "name": "merklio-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@hyperapp/router": "^0.7.2",
+    "axios": "^0.19.0",
+    "ethers": "^4.0.30",
+    "ethjs-extras": "0.0.7",
+    "hyperapp": "^1.2.10",
+    "hyperapp-styled-components": "^0.1.1",
+    "regenerator-runtime": "^0.13.2"
+  }
+}

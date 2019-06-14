@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "dist/*.js", "use": "@now/static" },
+    { "src": "dist/*.map", "use": "@now/static" },
+    { "src": "dist/*.html", "use": "@now/static" },
+    { "src": "dist/*.svg", "use": "@now/static" },
+    { "src": "dist/*.png", "use": "@now/static" }
+  ],
+  "routes": [
+    { "src": "^/(.*)", "dest": "/dist/$1"}
+  ],
+  "alias": [
+    "merkl.io"
+  ]
+}
