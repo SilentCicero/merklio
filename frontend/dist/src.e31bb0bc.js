@@ -14629,8 +14629,28 @@ var _moment = _interopRequireDefault(require("moment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _templateObject4() {
+  var data = _taggedTemplateLiteral(["\n  border: 3px dashed ", ";\n  min-height: 280px;\n  display: flex;\n\n  align-items: center;\n  flex-direction: row;\n  justify-content: center;\n"]);
+
+  _templateObject4 = function _templateObject4() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject3() {
+  var data = _taggedTemplateLiteral(["\n  background: ", ";\n  padding: 20px;\n  margin-top: 70px;\n"]);
+
+  _templateObject3 = function _templateObject3() {
+    return data;
+  };
+
+  return data;
+}
+
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["\n  padding: 20px;\n  width: 60%;\n  font-size: 20px;\n  margin-top: 70px;\n  font-family: 'Source Code Pro', monospace;\n"]);
+  var data = _taggedTemplateLiteral(["\n  padding: 20px;\n  width: 60%;\n  font-size: 13px;\n  margin-top: 70px;\n  font-family: 'Source Code Pro', monospace;\n"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -14757,30 +14777,28 @@ var actions = {
 
                 case 16:
                   _statusResult2 = _context.sent.data;
-                  console.log(_context.t0);
                   return _context.abrupt("return", actions.change({
                     result: 'Hash submitted to merkl.io! Please wait a few hours for our system to merklize and noterize it on-chain.'
                   }));
 
-                case 19:
+                case 18:
                   console.log(statusResult);
-                  _context.next = 26;
+                  _context.next = 24;
                   break;
 
-                case 22:
-                  _context.prev = 22;
+                case 21:
+                  _context.prev = 21;
                   _context.t1 = _context["catch"](0);
-                  console.log(_context.t1);
                   return _context.abrupt("return", actions.change({
                     result: 'There was an error with this data :('
                   }));
 
-                case 26:
+                case 24:
                 case "end":
                   return _context.stop();
               }
             }
-          }, _callee, this, [[0, 22], [4, 12]]);
+          }, _callee, this, [[0, 21], [4, 12]]);
         }));
 
         return function (_x, _x2) {
@@ -14788,6 +14806,24 @@ var actions = {
         };
       }()
     );
+  },
+  upload: function upload(evt) {
+    return function (state, actions) {
+      var files = evt.dataTransfer || evt.target.files; // FileList object
+      // use the 1st file from the list
+
+      var f = files[0];
+      var reader = new FileReader(); // Closure to capture the file information.
+
+      reader.onload = function (theFile) {
+        return function (e) {
+          actions.searchOrSubmit(utils.keccak256(utils.toUtf8Bytes(e.target.result)));
+        };
+      }(f); // Read in the image file as a data URL.
+
+
+      reader.readAsText(f);
+    };
   },
   load: function load() {
     return function (state, actions) {
@@ -14812,15 +14848,50 @@ var Wrapper = _hyperappStyledComponents.default.div(_templateObject());
 
 var ConsoleInput = _hyperappStyledComponents.default.input(_templateObject2());
 
+var UploadBox = _hyperappStyledComponents.default.div(_templateObject3(), lightgray);
+
+var UploadBoxInner = _hyperappStyledComponents.default.div(_templateObject4(), darker);
+
 var Lander = function Lander() {
   return function (state, actions) {
-    return (0, _hyperapp.h)(Wrapper, null, (0, _hyperapp.h)("h2", null, (0, _hyperapp.h)("u", null, "M"), "erkl.io"), (0, _hyperapp.h)("h3", null, "Noterize anything on Ethereum ", (0, _hyperapp.h)("b", null, (0, _hyperapp.h)("i", null, "for free")), "."), (0, _hyperapp.h)(ConsoleInput, {
+    return (0, _hyperapp.h)(Wrapper, null, (0, _hyperapp.h)("h2", null, (0, _hyperapp.h)("u", null, "M"), "erkl.io"), (0, _hyperapp.h)("h3", null, "Noterize anything on Ethereum ", (0, _hyperapp.h)("b", null, (0, _hyperapp.h)("i", null, "for free")), "."), (0, _hyperapp.h)("input", {
+      type: "file",
+      style: "display: none;",
+      id: "fileUpload",
+      oninput: function oninput(e) {
+        return actions.upload(e);
+      }
+    }), !state.open ? (0, _hyperapp.h)("div", {
+      ondrop: function ondrop(e) {
+        return actions.upload(e);
+      }
+    }, (0, _hyperapp.h)(UploadBox, {
+      onclick: function onclick(e) {
+        return document.querySelector('#fileUpload').click();
+      }
+    }, (0, _hyperapp.h)(UploadBoxInner, null, (0, _hyperapp.h)("p", null, (0, _hyperapp.h)("b", null, "Choose a file "), " to search or noterize.", (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("small", null, (0, _hyperapp.h)("i", null, "Note, documents are not stored and are hashed locally"))))), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("a", {
+      href: "#",
+      style: "margin-top: 20px;",
+      onclick: function onclick(e) {
+        return actions.change({
+          open: true
+        });
+      }
+    }, "or search by hash")) : '', state.open === true ? (0, _hyperapp.h)("div", null, (0, _hyperapp.h)(ConsoleInput, {
       type: "text",
       placeholder: "search or submit a hash",
       oninput: function oninput(e) {
         return actions.searchOrSubmit(e.target.value);
       }
-    }), state.result ? (0, _hyperapp.h)("div", {
+    }), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("a", {
+      href: "#",
+      style: "margin-top: 20px;",
+      onclick: function onclick(e) {
+        return actions.change({
+          open: false
+        });
+      }
+    }, "or by document")) : '', state.result ? (0, _hyperapp.h)("div", {
       style: "margin-top: 50px;"
     }, state.result) : '', (0, _hyperapp.h)("h4", {
       style: "margin-top: 100px;"
@@ -14874,7 +14945,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39711" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34875" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

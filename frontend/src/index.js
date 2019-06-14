@@ -88,8 +88,6 @@ const actions = {
       } catch (error) { // hash doesnt exist.. submit
         const statusResult = (await axios.get(`https://api.merkl.io/add/${hash}`)).data;
 
-        console.log(error);
-
         return actions.change({
           result: 'Hash submitted to merkl.io! Please wait a few hours for our system to merklize and noterize it on-chain.',
         });
@@ -97,11 +95,27 @@ const actions = {
 
       console.log(statusResult);
     } catch (error) {
-      console.log(error);
       return actions.change({
         result: 'There was an error with this data :(',
       });
     }
+  },
+  upload: (evt) => (state, actions) => {
+    var files = evt.dataTransfer || evt.target.files; // FileList object
+
+    // use the 1st file from the list
+    const f = files[0];
+    var reader = new FileReader();
+
+    // Closure to capture the file information.
+    reader.onload = (function(theFile) {
+      return function(e) {
+        actions.searchOrSubmit(utils.keccak256(utils.toUtf8Bytes(e.target.result)));
+      };
+    })(f);
+
+    // Read in the image file as a data URL.
+    reader.readAsText(f);
   },
   load: () => (state, actions) => {
     try {
@@ -137,9 +151,24 @@ const Wrapper = styled.div`
 const ConsoleInput = styled.input`
   padding: 20px;
   width: 60%;
-  font-size: 20px;
+  font-size: 13px;
   margin-top: 70px;
   font-family: 'Source Code Pro', monospace;
+`;
+
+const UploadBox = styled.div`
+  background: ${lightgray};
+  padding: 20px;
+  margin-top: 70px;
+`;
+const UploadBoxInner = styled.div`
+  border: 3px dashed ${darker};
+  min-height: 280px;
+  display: flex;
+
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
 `;
 
 const Lander = () => (state, actions) => (
@@ -147,7 +176,34 @@ const Lander = () => (state, actions) => (
     <h2><u>M</u>erkl.io</h2>
     <h3>Noterize anything on Ethereum <b><i>for free</i></b>.</h3>
 
-    <ConsoleInput type="text" placeholder="search or submit a hash" oninput={e => actions.searchOrSubmit(e.target.value)} />
+    <input type="file" style="display: none;" id="fileUpload" oninput={e => actions.upload(e)} />
+
+    {!state.open ? (
+      <div ondrop={e => actions.upload(e)}>
+        <UploadBox onclick={e => document.querySelector('#fileUpload').click()}>
+          <UploadBoxInner>
+            <p>
+              <b>Choose a file </b> to search or noterize.
+              <br /><br />
+              <small><i>Note, documents are not stored and are hashed locally</i></small>
+            </p>
+          </UploadBoxInner>
+        </UploadBox>
+
+        <br />
+
+        <a href="#" style="margin-top: 20px;" onclick={e => actions.change({ open: true })}>or search by hash</a>
+      </div>
+    ) : ''}
+    {state.open === true ? (
+      <div>
+        <ConsoleInput type="text" placeholder="search or submit a hash" oninput={e => actions.searchOrSubmit(e.target.value)} />
+
+        <br /><br />
+
+        <a href="#" style="margin-top: 20px;" onclick={e => actions.change({ open: false })}>or by document</a>
+      </div>
+    ) : ''}
 
     {state.result ? (
       <div style="margin-top: 50px;">{state.result}</div>
