@@ -10,6 +10,6 @@
   "author": "Nick Dodson",
   "license": "MIT",
   "dependencies": {
-    "ethers": "^4.0.28"
+    "ethers": "^4.0.30"
   }
 }

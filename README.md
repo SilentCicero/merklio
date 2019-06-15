@@ -2,6 +2,8 @@
 
 A free merkle-based notarization and proofing API micro-service for the Etheruem blockchain.
 
+No need for those pesky lawyers anymore :)
+
 ## About
 
 Submit 32 byte hashes for free to an API and have them merklized with the Merkle tree master hash published on the Ethereum public blockchain.
@@ -11,10 +13,6 @@ All merkle master hashes are submitted to a recording smart-contract where other
 ## Motivation
 
 This service can be used to notarize any data, document or action by virtue of deterministic merkle proofing system and the Ethereum blockchain.
-
-## Progress
-
-**Still working on this, none of the API's work just yet**
 
 ## Example
 
