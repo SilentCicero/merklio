@@ -14854,7 +14854,11 @@ var UploadBoxInner = _hyperappStyledComponents.default.div(_templateObject4(), d
 
 var Lander = function Lander() {
   return function (state, actions) {
-    return (0, _hyperapp.h)(Wrapper, null, (0, _hyperapp.h)("h2", null, (0, _hyperapp.h)("u", null, "M"), "erkl.io"), (0, _hyperapp.h)("h3", null, "Noterize anything on Ethereum ", (0, _hyperapp.h)("b", null, (0, _hyperapp.h)("i", null, "for free")), "."), (0, _hyperapp.h)("input", {
+    return (0, _hyperapp.h)(Wrapper, null, (0, _hyperapp.h)("h2", {
+      style: "position: relative;"
+    }, (0, _hyperapp.h)("u", null, "M"), "erkl.io", (0, _hyperapp.h)("small", {
+      style: "font-size: 10px; color: gray; display: flex;"
+    }, "ALPHA")), (0, _hyperapp.h)("h3", null, "Noterize anything on Ethereum ", (0, _hyperapp.h)("b", null, (0, _hyperapp.h)("i", null, "for free")), "."), (0, _hyperapp.h)("input", {
       type: "file",
       style: "display: none;",
       id: "fileUpload",
@@ -14895,10 +14899,13 @@ var Lander = function Lander() {
       style: "margin-top: 50px;"
     }, state.result) : '', (0, _hyperapp.h)("h4", {
       style: "margin-top: 100px;"
-    }, "How does it work?"), (0, _hyperapp.h)("p", null, "Merkl.io ingests 32 byte hashes for free, orgnizes them into a merkle tree off-chain, than submits the master hash on-chain to a callable Ethereum smart-contract every few hours."), (0, _hyperapp.h)("h4", null, "Why?"), (0, _hyperapp.h)("p", null, "Many documents, contacts and legal systems require 3rd party noterization that a stated peice of data both exists and exists at a certain time. The blockchain is a perfect noterization mechanism, like a lawyer that can noterize any data provably at a specific time. Merkl.io uses the Ethereum blockchain to noterize documents and data for free and submits the master hash proofs on chain so they can be challenged if need be."), (0, _hyperapp.h)("h4", null, "Developers / API"), (0, _hyperapp.h)("p", null, "We have open-sourced our entire code-base and provide the merkl.io endpoint for free under the MIT license. Read more about our developer documentation here:"), (0, _hyperapp.h)("a", {
+    }, "How does it work?"), (0, _hyperapp.h)("p", null, "Merkl.io ingests 32 byte hashes for free, orgnizes them into a merkle tree off-chain, than submits the master hash on-chain to a callable Ethereum smart-contract every few hours."), (0, _hyperapp.h)("h4", null, "Why?"), (0, _hyperapp.h)("p", null, "No need for those pesky lawyers to witness document signing anymore!"), (0, _hyperapp.h)("p", null, "Furthermore, many documents, contacts and legal systems require 3rd party noterization that a stated peice of data both exists and exists at a certain time. The blockchain is a perfect noterization mechanism, like a lawyer that can noterize any data provably at a specific time. Merkl.io uses the Ethereum blockchain to noterize documents and data for free and submits the master hash proofs on chain so they can be challenged if need be."), (0, _hyperapp.h)("h4", null, "Developers / API"), (0, _hyperapp.h)("p", null, "We have open-sourced our entire code-base and provide the merkl.io endpoint for free under the MIT license. Read more about our developer documentation here:"), (0, _hyperapp.h)("a", {
       href: "https://github.com/silentcicero/merkl",
       target: "_blank"
-    }, "Github Repo"));
+    }, "Github Repo"), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("h4", null, "Example"), (0, _hyperapp.h)("p", null, "Try looking up this hash (using \"search by hash\"): ", (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("br", null), " 0xe25ff4dcf11d7cd42b3c1be5e078ea5375c5992f9d3ff858f2318592bb0f5104"), (0, _hyperapp.h)("h4", null, "Smart Contract"), (0, _hyperapp.h)("p", null, (0, _hyperapp.h)("span", null, "Our smart-contract is available here "), (0, _hyperapp.h)("a", {
+      href: "https://etherscan.io/address/0x532d85bd4bd0233dfa0eed5b3fe8bcfbba0420a4",
+      target: "_blank"
+    }, "view it on Etherscan")));
   };
 }; // routes for app
 
@@ -14945,7 +14952,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34875" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40063" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

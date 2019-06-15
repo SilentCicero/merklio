@@ -173,7 +173,9 @@ const UploadBoxInner = styled.div`
 
 const Lander = () => (state, actions) => (
   <Wrapper>
-    <h2><u>M</u>erkl.io</h2>
+    <h2 style="position: relative;"><u>M</u>erkl.io
+      <small style="font-size: 10px; color: gray; display: flex;">ALPHA</small>
+    </h2>
     <h3>Noterize anything on Ethereum <b><i>for free</i></b>.</h3>
 
     <input type="file" style="display: none;" id="fileUpload" oninput={e => actions.upload(e)} />
@@ -215,7 +217,9 @@ const Lander = () => (state, actions) => (
 
     <h4>Why?</h4>
 
-    <p>Many documents, contacts and legal systems require 3rd party noterization that a stated peice of data both exists and exists at a certain time.
+    <p>No need for those pesky lawyers to witness document signing anymore!</p>
+
+    <p>Furthermore, many documents, contacts and legal systems require 3rd party noterization that a stated peice of data both exists and exists at a certain time.
     The blockchain is a perfect noterization mechanism, like a lawyer that can noterize any data provably at a specific time. Merkl.io uses the Ethereum blockchain to noterize documents and data for free and submits the master hash proofs on chain so they can be challenged if need be.</p>
 
     <h4>Developers / API</h4>
@@ -223,6 +227,17 @@ const Lander = () => (state, actions) => (
     <p>We have open-sourced our entire code-base and provide the merkl.io endpoint for free under the MIT license. Read more about our developer documentation here:</p>
 
     <a href="https://github.com/silentcicero/merkl" target="_blank">Github Repo</a>
+
+    <br />
+
+    <h4>Example</h4>
+
+    <p>Try looking up this hash (using "search by hash"): <br /><br /> 0xe25ff4dcf11d7cd42b3c1be5e078ea5375c5992f9d3ff858f2318592bb0f5104</p>
+
+    <h4>Smart Contract</h4>
+
+    <p><span>Our smart-contract is available here </span>
+     <a href="https://etherscan.io/address/0x532d85bd4bd0233dfa0eed5b3fe8bcfbba0420a4" target="_blank">view it on Etherscan</a></p>
   </Wrapper>
 );
 
