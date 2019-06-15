@@ -2,7 +2,9 @@
 
 A free merkle-based notarization and proofing API micro-service for the Etheruem blockchain.
 
-No need for those pesky lawyers anymore :)
+No need for those pesky lawyers to notarize data anymore :)
+
+https://merkl.io/
 
 ## About
 
@@ -25,9 +27,7 @@ This is the Best-Case example of the service!
 Add a new hash to be merklized (GET or POST works here)
 */
 
-axios.get('https://merkl.io/add/', {
-  hash: '0x26b74a107f953ab5e3aac2dcde97126224fe6c7da163782bba6372b3deaf1a14',
-});
+axios.get('https://api.merkl.io/add/0x26b74a107f953ab5e3aac2dcde97126224fe6c7da163782bba6372b3deaf1a14');
 
 // timestamp serer signature
 
@@ -40,7 +40,7 @@ axios.get('https://merkl.io/add/', {
 Get hash status or proof
 */
 
-axios.get('https://merkl.io/status/0x26b74a107f953ab5e3aac2dcde97126224fe6c7da163782bba6372b3deaf1a14');
+axios.get('https://api.merkl.io/status/0x26b74a107f953ab5e3aac2dcde97126224fe6c7da163782bba6372b3deaf1a14');
 
 // returns this
 
