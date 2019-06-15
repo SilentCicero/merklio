@@ -42,6 +42,8 @@ const state = {
 
 var editor;
 
+// local.setItem('hashes', '[]');
+
 // define initial actions
 const actions = {
   location: location.actions,
@@ -60,13 +62,31 @@ const actions = {
       try {
         const statusResult = (await axios.get(`https://api.merkl.io/status/${hash}`)).data;
 
-        console.log(statusResult);
-
         return actions.change({
-          result: statusResult.status === 'pending' ? 'Your hash is pending merklization and noterization.' : (
+          result: statusResult.status === 'pending' ? (<div>
+            <h2>Notarization Record:</h2>
+
+            <p>This hash is pending merklization and notarization.</p>
+
+            <br />
+
+            <h3>Hash</h3>
+
+            <p>{hash}</p>
+          </div>) : (
             <div>
+              <h2>Notarization Record:</h2>
+              <p>This hash has been successfully notarized via deterministic merkle-proofs on the Ethereum blockchain</p>
+
+              <br />
+
               <h3>Hash</h3>
               <p>{statusResult.hash}</p>
+
+              <br />
+
+              <h3>Notarized on:</h3>
+              <p>{statusResult.created}</p>
 
               <br />
 
@@ -76,24 +96,35 @@ const actions = {
               <br />
 
               <h3>Transaction Hash:</h3>
-              <p>{statusResult.tx} <a href={`https://etherscan.io/tx/${statusResult.tx}`} target="_blank">view it on Etherscan</a></p>
+              <p>{statusResult.tx} <br /> <a href={`https://etherscan.io/tx/${statusResult.tx}`} target="_blank">view it on Etherscan</a></p>
 
               <br />
 
               <h3>Merkle Proof</h3>
               <pre>{JSON.stringify(statusResult.proof, null, 2)}</pre>
+
+              <br />
+
+              <a
+                href={URL.createObjectURL(new Blob([JSON.stringify(statusResult)], { type: "application/json" }))}
+                download={`${statusResult.hash}-notarization-record.json`}>
+                Save Notarization Record as JSON
+              </a>
             </div>
           ),
         });
       } catch (error) { // hash doesnt exist.. submit
-        const statusResult = (await axios.get(`https://api.merkl.io/add/${hash}`)).data;
+        const statusResult = ((await axios.get(`https://api.merkl.io/add/${hash}`)) || {}).data;
+
+        // store hashes locally
+        const hashes = (JSON.parse(local.getItem('hashes') || '[]') || []).concat([hash]);
+        actions.change({ hashes });
+        local.setItem('hashes', JSON.stringify(hashes));
 
         return actions.change({
-          result: 'Hash submitted to merkl.io! Please wait a few hours for our system to merklize and noterize it on-chain.',
+          result: 'Hash submitted to merkl.io! Please wait a few hours for our system to merklize and notarize it on-chain.',
         });
       }
-
-      console.log(statusResult);
     } catch (error) {
       return actions.change({
         result: 'There was an error with this data :(',
@@ -118,9 +149,13 @@ const actions = {
     reader.readAsText(f);
   },
   load: () => (state, actions) => {
-    try {
-    } catch (err) {
-    }
+    // load up stored hashes
+    actions.change({ hashes: (JSON.parse(local.getItem('hashes') || '[]') || []) });
+  },
+  clearHistory: () => (state, actions) => {
+    // clear all stored hashes
+    actions.change({ hashes: [] });
+    local.setItem('hashes', '[]');
   },
   change: obj => obj,
 };
@@ -165,6 +200,7 @@ const UploadBoxInner = styled.div`
   border: 3px dashed ${darker};
   min-height: 280px;
   display: flex;
+  padding: 20px;
 
   align-items: center;
   flex-direction: row;
@@ -173,19 +209,19 @@ const UploadBoxInner = styled.div`
 
 const Lander = () => (state, actions) => (
   <Wrapper>
-    <h2 style="position: relative;"><u>M</u>erkl.io
-      <small style="font-size: 10px; color: gray; display: flex;">ALPHA</small>
+    <h2 style="position: relative;"><a style="color: black; text-decoration: none;" href="http://merkl.io"><u>M</u>erkl.io
+      <small style="font-size: 10px; color: gray; display: flex;">ALPHA</small></a>
     </h2>
-    <h3>Noterize anything on Ethereum <b><i>for free</i></b>.</h3>
+    <h3>Notarize anything on Ethereum <b><i>for free</i></b>.</h3>
 
-    <input type="file" style="display: none;" id="fileUpload" oninput={e => actions.upload(e)} />
+    <input type="file" style="display: none;" id="fileUpload" onchange={e => actions.upload(e)} />
 
     {!state.open ? (
       <div ondrop={e => actions.upload(e)}>
         <UploadBox onclick={e => document.querySelector('#fileUpload').click()}>
           <UploadBoxInner>
             <p>
-              <b>Choose a file </b> to search or noterize.
+              <b>Choose a file </b> to search or notarize.
               <br /><br />
               <small><i>Note, documents are not stored and are hashed locally</i></small>
             </p>
@@ -207,8 +243,23 @@ const Lander = () => (state, actions) => (
       </div>
     ) : ''}
 
+    <a name="recordAnchor"></a>
     {state.result ? (
       <div style="margin-top: 50px;">{state.result}</div>
+    ) : ''}
+
+    {(state.hashes || '').length ? (
+      <div>
+        <h4 style="margin-top: 100px;">Your History</h4>
+
+        {(state.hashes || []).map(hash => (
+          <p><a href="#recordAnchor" onclick={e => actions.searchOrSubmit(hash)}>{hash}</a></p>
+        ))}
+
+        <br />
+
+        <a style="margin-top: 40px;" onclick={actions.clearHistory}>Clear History</a>
+      </div>
     ) : ''}
 
     <h4 style="margin-top: 100px;">How does it work?</h4>
@@ -217,10 +268,10 @@ const Lander = () => (state, actions) => (
 
     <h4>Why?</h4>
 
-    <p>No need for those pesky lawyers to witness document signing anymore!</p>
+    <p>No need for those pesky lawyers to witness/notarize documents anymore!</p>
 
-    <p>Furthermore, many documents, contacts and legal systems require 3rd party noterization that a stated peice of data both exists and exists at a certain time.
-    The blockchain is a perfect noterization mechanism, like a lawyer that can noterize any data provably at a specific time. Merkl.io uses the Ethereum blockchain to noterize documents and data for free and submits the master hash proofs on chain so they can be challenged if need be.</p>
+    <p>Furthermore, many documents, contacts and legal systems require 3rd party notarization that a stated peice of data both exists and exists at a certain time.
+    The blockchain is a perfect notarization mechanism, like a lawyer that can notarize any data provably at a specific time. Merkl.io uses the Ethereum blockchain to notarize documents and data for free and submits the master hash proofs on chain so they can be challenged if need be.</p>
 
     <h4>Developers / API</h4>
 
@@ -232,7 +283,8 @@ const Lander = () => (state, actions) => (
 
     <h4>Example</h4>
 
-    <p>Try looking up this hash (using "search by hash"): <br /><br /> 0xe25ff4dcf11d7cd42b3c1be5e078ea5375c5992f9d3ff858f2318592bb0f5104</p>
+    <p>Click on this hash to lookup the notarization record: <br /><br />
+      <a href="#recordAnchor" onclick={e => actions.searchOrSubmit('0xe25ff4dcf11d7cd42b3c1be5e078ea5375c5992f9d3ff858f2318592bb0f5104')}>0xe25ff4dcf11d7cd42b3c1be5e078ea5375c5992f9d3ff858f2318592bb0f5104</a></p>
 
     <h4>Smart Contract</h4>
 
