@@ -274,7 +274,9 @@ const Lander = () => (state, actions) => (
     <h4>Why?</h4>
 
     <p>No need for those pesky lawyers to witness/notarize documents anymore!</p>
-    <small>Note, the above is not legal advice. We mean this in theory. :)</small>
+    <small style="font-size: 10px;">Note, the above is not legal advice. We mean this in theory.</small>
+
+    <br />
 
     <p>Furthermore, many documents, contacts and legal systems require 3rd party notarization that a stated peice of data both exists and exists at a certain time.
     The blockchain is a perfect notarization mechanism, like a lawyer that can notarize any data provably at a specific time. Merkl.io uses the Ethereum blockchain to notarize documents and data for free and submits the master hash proofs on chain so they can be challenged if need be.</p>
