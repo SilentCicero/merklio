@@ -14770,7 +14770,7 @@ var actions = {
                       href: URL.createObjectURL(new Blob([JSON.stringify(statusResult)], {
                         type: "application/json"
                       })),
-                      download: "{statusResult.hash}-notarization-record.json"
+                      download: "".concat(statusResult.hash, "-notarization-record.json")
                     }, "Save Notarization Record as JSON"))
                   }));
 
@@ -14888,9 +14888,12 @@ var Lander = function Lander() {
   return function (state, actions) {
     return (0, _hyperapp.h)(Wrapper, null, (0, _hyperapp.h)("h2", {
       style: "position: relative;"
+    }, (0, _hyperapp.h)("a", {
+      style: "color: black; text-decoration: none;",
+      href: "http://merkl.io"
     }, (0, _hyperapp.h)("u", null, "M"), "erkl.io", (0, _hyperapp.h)("small", {
       style: "font-size: 10px; color: gray; display: flex;"
-    }, "ALPHA")), (0, _hyperapp.h)("h3", null, "Notarize anything on Ethereum ", (0, _hyperapp.h)("b", null, (0, _hyperapp.h)("i", null, "for free")), "."), (0, _hyperapp.h)("input", {
+    }, "ALPHA"))), (0, _hyperapp.h)("h3", null, "Notarize anything on Ethereum ", (0, _hyperapp.h)("b", null, (0, _hyperapp.h)("i", null, "for free")), "."), (0, _hyperapp.h)("input", {
       type: "file",
       style: "display: none;",
       id: "fileUpload",
@@ -14905,7 +14908,17 @@ var Lander = function Lander() {
       onclick: function onclick(e) {
         return document.querySelector('#fileUpload').click();
       }
-    }, (0, _hyperapp.h)(UploadBoxInner, null, (0, _hyperapp.h)("p", null, (0, _hyperapp.h)("b", null, "Choose a file "), " to search or notarize.", (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("small", null, (0, _hyperapp.h)("i", null, "Note, documents are not stored and are hashed locally"))))), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("a", {
+    }, (0, _hyperapp.h)(UploadBoxInner, null, (0, _hyperapp.h)("p", null, (0, _hyperapp.h)("p", {
+      style: "text-align: center; margin-bottom: 10px;"
+    }, (0, _hyperapp.h)("svg", {
+      class: "box__icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "80",
+      height: "70",
+      viewBox: "0 0 80 70"
+    }, (0, _hyperapp.h)("path", {
+      d: "M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"
+    }))), (0, _hyperapp.h)("b", null, "Choose a file "), " to search or notarize.", (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("small", null, (0, _hyperapp.h)("i", null, "Note, documents are not stored and are hashed locally"))))), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("a", {
       href: "#",
       style: "margin-top: 20px;",
       onclick: function onclick(e) {
@@ -14945,7 +14958,7 @@ var Lander = function Lander() {
       onclick: actions.clearHistory
     }, "Clear History")) : '', (0, _hyperapp.h)("h4", {
       style: "margin-top: 100px;"
-    }, "How does it work?"), (0, _hyperapp.h)("p", null, "Merkl.io ingests 32 byte hashes for free, orgnizes them into a merkle tree off-chain, than submits the master hash on-chain to a callable Ethereum smart-contract every few hours."), (0, _hyperapp.h)("h4", null, "Why?"), (0, _hyperapp.h)("p", null, "No need for those pesky lawyers to witness/notarize documents anymore!"), (0, _hyperapp.h)("p", null, "Furthermore, many documents, contacts and legal systems require 3rd party notarization that a stated peice of data both exists and exists at a certain time. The blockchain is a perfect notarization mechanism, like a lawyer that can notarize any data provably at a specific time. Merkl.io uses the Ethereum blockchain to notarize documents and data for free and submits the master hash proofs on chain so they can be challenged if need be."), (0, _hyperapp.h)("h4", null, "Developers / API"), (0, _hyperapp.h)("p", null, "We have open-sourced our entire code-base and provide the merkl.io endpoint for free under the MIT license. Read more about our developer documentation here:"), (0, _hyperapp.h)("a", {
+    }, "How does it work?"), (0, _hyperapp.h)("p", null, "Merkl.io ingests 32 byte hashes for free, orgnizes them into a merkle tree off-chain, than submits the master hash on-chain to a callable Ethereum smart-contract every few hours."), (0, _hyperapp.h)("h4", null, "Why?"), (0, _hyperapp.h)("p", null, "No need for those pesky lawyers to witness/notarize documents anymore!"), (0, _hyperapp.h)("small", null, "Note, the above is not legal advice. We mean this in theory. :)"), (0, _hyperapp.h)("p", null, "Furthermore, many documents, contacts and legal systems require 3rd party notarization that a stated peice of data both exists and exists at a certain time. The blockchain is a perfect notarization mechanism, like a lawyer that can notarize any data provably at a specific time. Merkl.io uses the Ethereum blockchain to notarize documents and data for free and submits the master hash proofs on chain so they can be challenged if need be."), (0, _hyperapp.h)("h4", null, "Developers / API"), (0, _hyperapp.h)("p", null, "We have open-sourced our entire code-base and provide the merkl.io endpoint for free under the MIT license. Read more about our developer documentation here:"), (0, _hyperapp.h)("a", {
       href: "https://github.com/silentcicero/merkl",
       target: "_blank"
     }, "Github Repo"), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("h4", null, "Example"), (0, _hyperapp.h)("p", null, "Click on this hash to lookup the notarization record: ", (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("a", {
@@ -15003,7 +15016,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44027" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40333" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
