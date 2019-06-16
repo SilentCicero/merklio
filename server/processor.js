@@ -68,11 +68,15 @@ let gasPriceLastChecked = unixtime();
 // base gas limit
 const gasLimit = utils.bigNumberify('4000000');
 
+// quick start
+let quickStart = true;
+
 // run process
 async function runProcess() {
   try {
     // wait a few moments to try again
-    await wait((3600 * 24) * 1000); // merklize everything once a day
+    await wait(quickStart ? 0 : (3600 * 24) * 1000); // merklize everything once a day
+    quickStart = false; // turn start off regardless
 
     // connect mongo, should be instant.. get hashes
     const { Hash, Group } = await connect();
@@ -140,9 +144,9 @@ async function runProcess() {
       depth1[groupMasterHash] = chnk; // set chunk in object
 
       // update the hash database.
-      await Hash.update({ _id: { $in: chnk }}, { // update hashes
+      await Hash.updateMany({ _id: { $in: chnk }}, { // update hashes
         $set: { m: groupMasterHash }, // remove data and assign to true
-      }, { multi: false, upsert: false });
+      }, { multi: true, upsert: false });
 
       // save the initial hash group
       const hashGroup = new Group({
@@ -161,9 +165,9 @@ async function runProcess() {
       depth2[groupMasterHash] = chnk;
 
       // update the hash database.
-      await Group.update({ _id: { $in: chnk }}, { // update hashes
+      await Group.updateMany({ _id: { $in: chnk }}, { // update hashes
         $set: { m: groupMasterHash }, // remove data and assign to true
-      }, { multi: false, upsert: false });
+      }, { multi: true, upsert: false });
 
       // save the initial hash group
       const hashGroup = new Group({
@@ -178,9 +182,9 @@ async function runProcess() {
     const masterHash = hashIt(secondRoundMasterHashes);
 
     // update the hash database.
-    await Group.update({ _id: { $in: secondRoundMasterHashes }}, { // update hashes
+    await Group.updateMany({ _id: { $in: secondRoundMasterHashes }}, { // update hashes
       $set: { m: masterHash }, // remove data and assign to true
-    }, { multi: false, upsert: false });
+    }, { multi: true, upsert: false });
 
     // store master hash on the Ethereum blockchain
     const tx = await contractInstance.store(masterHash);
@@ -202,7 +206,7 @@ async function runProcess() {
     // update the hash database.
     await Hash.updateMany({ _id: { $in: hashes }}, {
       $set: { a: true }, // remove data and assign to true
-    }, { multi: false, upsert: false });
+    }, { multi: true, upsert: false });
 
     console.log('# Hashes marked assigned, queue reset..', hashes.length);
 
