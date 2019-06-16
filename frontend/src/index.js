@@ -60,7 +60,22 @@ const actions = {
       });
 
       try {
-        const statusResult = (await axios.get(`https://api.merkl.io/status/${hash}`)).data;
+        let statusResult = {
+          status: 'pending',
+        };
+
+        // temp patch..
+        try {
+          statusResult = (await axios.get(`https://api.merkl.io/status/${hash}`)).data;
+        } catch (error) {
+          console.log(error.response);
+
+          if (((error.response || {}).data || '').indexOf('Cannot read') !== -1) {
+            console.log('pass');
+          } else {
+            throw new Error('bad');
+          }
+        }
 
         return actions.change({
           result: statusResult.status === 'pending' ? (<div>

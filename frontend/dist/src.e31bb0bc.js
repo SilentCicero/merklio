@@ -14757,11 +14757,37 @@ var actions = {
                     result: 'Processing..'
                   });
                   _context.prev = 4;
-                  _context.next = 7;
+                  statusResult = {
+                    status: 'pending'
+                  }; // temp patch..
+
+                  _context.prev = 6;
+                  _context.next = 9;
                   return _axios.default.get("https://api.merkl.io/status/".concat(hash));
 
-                case 7:
+                case 9:
                   statusResult = _context.sent.data;
+                  _context.next = 20;
+                  break;
+
+                case 12:
+                  _context.prev = 12;
+                  _context.t0 = _context["catch"](6);
+                  console.log(_context.t0.response);
+
+                  if (!(((_context.t0.response || {}).data || '').indexOf('Cannot read') !== -1)) {
+                    _context.next = 19;
+                    break;
+                  }
+
+                  console.log('pass');
+                  _context.next = 20;
+                  break;
+
+                case 19:
+                  throw new Error('bad');
+
+                case 20:
                   return _context.abrupt("return", actions.change({
                     result: statusResult.status === 'pending' ? (0, _hyperapp.h)("div", null, (0, _hyperapp.h)("h2", null, "Notarization Record:"), (0, _hyperapp.h)("p", null, "This hash is pending merklization and notarization."), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("h3", null, "Hash"), (0, _hyperapp.h)("p", null, hash)) : (0, _hyperapp.h)("div", null, (0, _hyperapp.h)("h2", null, "Notarization Record:"), (0, _hyperapp.h)("p", null, "This hash has been successfully notarized via deterministic merkle-proofs on the Ethereum blockchain"), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("h3", null, "Hash"), (0, _hyperapp.h)("p", null, statusResult.hash), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("h3", null, "Notarized on:"), (0, _hyperapp.h)("p", null, statusResult.created), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("h3", null, "Status"), (0, _hyperapp.h)("p", null, "Transacted"), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("h3", null, "Transaction Hash:"), (0, _hyperapp.h)("p", null, statusResult.tx, " ", (0, _hyperapp.h)("br", null), " ", (0, _hyperapp.h)("a", {
                       href: "https://etherscan.io/tx/".concat(statusResult.tx),
@@ -14774,24 +14800,24 @@ var actions = {
                     }, "Save Notarization Record as JSON"))
                   }));
 
-                case 11:
-                  _context.prev = 11;
-                  _context.t0 = _context["catch"](4);
-                  _context.next = 15;
+                case 23:
+                  _context.prev = 23;
+                  _context.t1 = _context["catch"](4);
+                  _context.next = 27;
                   return _axios.default.get("https://api.merkl.io/add/".concat(hash));
 
-                case 15:
-                  _context.t1 = _context.sent;
+                case 27:
+                  _context.t2 = _context.sent;
 
-                  if (_context.t1) {
-                    _context.next = 18;
+                  if (_context.t2) {
+                    _context.next = 30;
                     break;
                   }
 
-                  _context.t1 = {};
+                  _context.t2 = {};
 
-                case 18:
-                  _statusResult = _context.t1.data;
+                case 30:
+                  _statusResult = _context.t2.data;
                   // store hashes locally
                   hashes = (JSON.parse(local.getItem('hashes') || '[]') || []).concat([hash]);
                   actions.change({
@@ -14802,23 +14828,23 @@ var actions = {
                     result: 'Hash submitted to merkl.io! Please wait a few hours for our system to merklize and notarize it on-chain.'
                   }));
 
-                case 23:
-                  _context.next = 28;
+                case 35:
+                  _context.next = 40;
                   break;
 
-                case 25:
-                  _context.prev = 25;
-                  _context.t2 = _context["catch"](0);
+                case 37:
+                  _context.prev = 37;
+                  _context.t3 = _context["catch"](0);
                   return _context.abrupt("return", actions.change({
                     result: 'There was an error with this data :('
                   }));
 
-                case 28:
+                case 40:
                 case "end":
                   return _context.stop();
               }
             }
-          }, _callee, this, [[0, 25], [4, 11]]);
+          }, _callee, this, [[0, 37], [4, 23], [6, 12]]);
         }));
 
         return function (_x, _x2) {
@@ -14958,7 +14984,9 @@ var Lander = function Lander() {
       onclick: actions.clearHistory
     }, "Clear History")) : '', (0, _hyperapp.h)("h4", {
       style: "margin-top: 100px;"
-    }, "How does it work?"), (0, _hyperapp.h)("p", null, "Merkl.io ingests 32 byte hashes for free, orgnizes them into a merkle tree off-chain, than submits the master hash on-chain to a callable Ethereum smart-contract every few hours."), (0, _hyperapp.h)("h4", null, "Why?"), (0, _hyperapp.h)("p", null, "No need for those pesky lawyers to witness/notarize documents anymore!"), (0, _hyperapp.h)("small", null, "Note, the above is not legal advice. We mean this in theory. :)"), (0, _hyperapp.h)("p", null, "Furthermore, many documents, contacts and legal systems require 3rd party notarization that a stated peice of data both exists and exists at a certain time. The blockchain is a perfect notarization mechanism, like a lawyer that can notarize any data provably at a specific time. Merkl.io uses the Ethereum blockchain to notarize documents and data for free and submits the master hash proofs on chain so they can be challenged if need be."), (0, _hyperapp.h)("h4", null, "Developers / API"), (0, _hyperapp.h)("p", null, "We have open-sourced our entire code-base and provide the merkl.io endpoint for free under the MIT license. Read more about our developer documentation here:"), (0, _hyperapp.h)("a", {
+    }, "How does it work?"), (0, _hyperapp.h)("p", null, "Merkl.io ingests 32 byte hashes for free, orgnizes them into a merkle tree off-chain, than submits the master hash on-chain to a callable Ethereum smart-contract every few hours."), (0, _hyperapp.h)("h4", null, "Why?"), (0, _hyperapp.h)("p", null, "No need for those pesky lawyers to witness/notarize documents anymore!"), (0, _hyperapp.h)("small", {
+      style: "font-size: 10px;"
+    }, "Note, the above is not legal advice. We mean this in theory."), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("p", null, "Furthermore, many documents, contacts and legal systems require 3rd party notarization that a stated peice of data both exists and exists at a certain time. The blockchain is a perfect notarization mechanism, like a lawyer that can notarize any data provably at a specific time. Merkl.io uses the Ethereum blockchain to notarize documents and data for free and submits the master hash proofs on chain so they can be challenged if need be."), (0, _hyperapp.h)("h4", null, "Developers / API"), (0, _hyperapp.h)("p", null, "We have open-sourced our entire code-base and provide the merkl.io endpoint for free under the MIT license. Read more about our developer documentation here:"), (0, _hyperapp.h)("a", {
       href: "https://github.com/silentcicero/merkl",
       target: "_blank"
     }, "Github Repo"), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("h4", null, "Example"), (0, _hyperapp.h)("p", null, "Click on this hash to lookup the notarization record: ", (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("br", null), (0, _hyperapp.h)("a", {
@@ -15016,7 +15044,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40333" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33381" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
