@@ -16,6 +16,6 @@
     "joi": "14.3.1",
     "micro": "9.3.4",
     "micro-query": "0.3.0",
-    "mongoose": "5.5.14"
+    "mongoose": "5.7.7"
   }
 }
